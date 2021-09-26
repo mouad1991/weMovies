@@ -1,0 +1,21 @@
+<div class="modal-body">
+    {%
+        set video = movie.videos|filter((v) => v.site == 'YouTube')|first
+     %}
+    {% if video %}
+        <div class="ratio ratio-16x9">
+            <iframe src="{{ 'https://www.youtube.com/embed/'~video.key }}" title="{{ video.name }}" allowfullscreen></iframe>
+        </div>
+        <h4 class="mt-3 mb-5"> {{ video.name }}</h4>
+    {% endif %}
+    <h6 class="card-title mb-3">{{ movie.title }}
+        {% for i in 1..5 %}
+            {% set starClass = (movie.voteAverage/2 >= i ? "fas fa-star" : movie.voteAverage/2 > i-0.7 ? "fas fa-star-half-alt" : "far fa-star")  %}
+            <i class="{{ starClass }} fa-1x text-primary"></i>
+        {% endfor %}
+        <span class="vote-count"> &nbsp;&nbsp;<span class="badge bg-info text-dark">{{ movie.voteAverage }}</span> pour  {{ movie.voteCount }} utilisateurs</span>
+    </h6>
+    <p>
+        {{ movie.overview }}
+    </p>
+</div>

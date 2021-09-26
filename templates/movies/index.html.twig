@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+{% block title 'We Movies' %}
+{% block body %}
+    <div class="container mt-5">
+        {%
+            set video = data['popular'].videos|filter((v) => v.site == 'YouTube')|first
+        %}
+        {% if video %}
+            <div class="row flex">
+                <div class="ratio ratio-16x9">
+                    <iframe src="{{ 'https://www.youtube.com/embed/'~video.key }}" title="{{ video.name }}" allowfullscreen></iframe>
+                </div>
+            </div>
+        {% endif %}
+        <div class="row flex mt-5">
+            <div class="col-3">
+                <div class="list-group-flush">
+                    {%
+                        set genreIds = genreIds|split(',')
+                     %}
+                    {% for genre in genres %}
+                        {% if genre.id in genreIds %}
+                            {%
+                                set newGenreIds = genreIds|filter((id) => id != genre.id)
+                            %}
+                        {% else %}
+                            {%
+                                set newGenreIds = genreIds|merge([genre.id])
+                            %}
+                        {% endif %}
+                        <a class="href-list-group-item" href="{{ path('movies.index', {'genreIds': newGenreIds|join(','), 'page': 1}) }}">
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="checkbox" {% if genre.id in genreIds %} checked {% endif %}>
+                                {{ genre.name }}
+                            </li>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-9">
+                {% if data['movies'] is empty %}
+                    <div class="alert alert-info" role="alert">
+                        Désolé, aucun élément ne correspond à votre recherche
+                    </div>
+                {% else %}
+                    {% for movie in data['movies'] %}
+                        {%
+                            set movieGenres = genres|filter((g) => g.id in movie.genreIds)
+                        %}
+                        <div class="row">
+                            <div class="card text-dark bg-light mb-3">
+                                <div class="row g-0">
+                                    <div class="col-md-2">
+                                        <img src="{{ movie.posterUrl }}" class="img-fluid rounded-start" alt="{{ movie.title }}">
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ movie.title }}
+                                                {% for i in 1..5 %}
+                                                    {% set starClass = (movie.voteAverage/2 >= i ? "fas fa-star" : movie.voteAverage/2 > i-0.7 ? "fas fa-star-half-alt" : "far fa-star")  %}
+                                                    <i class="{{ starClass }} fa-1x text-primary"></i>
+                                                {% endfor %}
+                                                <span class="vote-count"> &nbsp;&nbsp; ({{ movie.voteCount }} votes)</span>
+                                            </h5>
+                                            <h6>{{ movie.releaseDate | date("Y") }} -
+                                            {% for movieGenre in movieGenres %}
+                                                <span class="badge bg-primary">{{ movieGenre.name }}</span>
+                                            {% endfor %}
+                                            </h6>
+                                            <p class="card-text">{{ movie.overview[:230] ~ ' ...'  }}</p>
+                                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
+                                                <a href="{{ path('movies.show', {id: movie.id}) }}" type="button" class="btn btn-primary rounded-pill show-details">Lire le details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        {{ include('movies/pagination.html.twig', {"pagination": data['pagination']}) }}
+    </div>
+    <div class="modal fade" id="details-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" id="details-content">
+            </div>
+        </div>
+    </div>
+{% endblock %}

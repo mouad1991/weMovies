@@ -1,0 +1,31 @@
+{% if pagination['total_pages'] > 1 %}
+    <div class="row">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if 1 is same as(pagination['page']) %} disabled {% endif %}">
+                    <a class="page-link" href="{{ path('movies.index', {'genreIds': genreIds|join(','), 'page': pagination['page'] - 1}) }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item {% if 1 is same as(pagination['page']) %} active {% endif %}"><a class="page-link" href="{{ path('movies.index', {'genreIds': genreIds|join(','), 'page': 1}) }}">1</a></li>
+                {% if (pagination['page'] - 1)|abs > 2%}
+                    <li class="page-item disabled"><a class="page-link" tabindex="-1" href="#" aria-disabled="true">...</a></li>
+                {% endif %}
+                {% for i in 2..pagination['total_pages']-1 %}
+                    {% if (pagination['page'] - i)|abs <= 2 %}
+                        <li class="page-item {% if i is same as(pagination['page']) %} active {% endif %}"><a class="page-link" href="{{ path('movies.index', {'genreIds': genreIds|join(','), 'page': i}) }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if (pagination['page'] - pagination['total_pages'])|abs > 2%}
+                    <li class="page-item disabled"><a class="page-link" tabindex="-1" href="#" aria-disabled="true">...</a></li>
+                {% endif %}
+                <li class="page-item {% if pagination['total_pages'] is same as(pagination['page']) %} active {% endif %}"><a class="page-link" href="{{ path('movies.index', {'genreIds': genreIds|join(','), 'page': pagination['total_pages']}) }}">{{ pagination['total_pages'] }}</a></li>
+                <li class="page-item {% if pagination['total_pages'] is same as(pagination['page']) %} disabled {% endif %}">
+                    <a class="page-link" href="{{ path('movies.index', {'genreIds': genreIds|join(','), 'page': pagination['page'] + 1}) }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+{% endif %}

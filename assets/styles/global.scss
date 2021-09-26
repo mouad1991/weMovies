@@ -1,0 +1,16 @@
+@import "~bootstrap/scss/bootstrap";
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
+.list-group-item {
+    padding: 1rem 1rem;
+    border: none;
+}
+
+.href-list-group-item {
+    text-decoration: none;
+}
+
+.vote-count {
+    font-weight: lighter;
+    font-size: initial;
+}
