@@ -41,3 +41,7 @@ If you don't have the Symfony binary installed, run `php -S localhost:8000 -t pu
 to use the built-in PHP web server or [configure a web server][3] like Nginx or
 Apache to run the application.
 
+[2]: https://symfony.com/doc/current/reference/requirements.html
+[3]: https://symfony.com/doc/current/cookbook/configuration/web_server_configuration.html
+[4]: https://symfony.com/download
+
